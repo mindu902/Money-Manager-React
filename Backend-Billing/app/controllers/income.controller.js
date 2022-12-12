@@ -1,0 +1,141 @@
+const db = require("../models");
+const config = require("../config/auth.config");
+const User = db.user;
+const Income = db.income;
+const Op = db.Sequelize.Op;
+const Sequelize = require("sequelize");
+
+exports.getIncomeByUser = (req, res) => {
+  console.log(req.body);
+  Income.findAll({
+    where: {
+      username: req.body.username,
+    },
+    attributes: ["id", "category", "recorddate", "amount", "notes"],
+  })
+    .then((income) => {
+      res.json(income);
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+};
+
+exports.getIncomeByMonth = (req, res) => {
+  console.log(req.body);
+  Income.findAll({
+    where: {
+      username: req.body.username,
+      recordyear: req.body.year,
+      recordmonth: req.body.month,
+    },
+    attributes: [[Sequelize.fn("SUM", Sequelize.col("amount")), "amounts"]],
+  })
+    .then((income) => {
+      res.json(income);
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+};
+
+exports.addIncome = (req, res) => {
+  console.log(req.body);
+  Income.create({
+    username: req.body.username,
+    category: req.body.category,
+    recorddate: req.body.recorddate,
+    recordyear: req.body.recordyear,
+    recordmonth: req.body.recordmonth,
+    amount: req.body.amount,
+    notes: req.body.notes,
+  })
+    .then((income) => {
+      res.status(200).send({ message: "Income has been added!" });
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+};
+
+//get all Income record given year and month
+exports.getAllIncomeByMonth = (req, res) => {
+  console.log(req.body);
+  Income.findAll({
+    where: {
+      username: req.body.username,
+      recordyear: req.body.year,
+      recordmonth: req.body.month,
+    },
+    attributes: ["category", "recorddate", "amount"],
+  })
+    .then((income) => {
+      res.status(200).send({ message: "Success", data: res.json(income) });
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+};
+
+//get all income record given year and month
+exports.getIncomeByMonthCat = (req, res) => {
+  console.log(req.body);
+  Income.findAll({
+    where: {
+      username: req.body.username,
+      recordyear: req.body.year,
+      recordmonth: req.body.month,
+    },
+    attributes: [
+      "category",
+      [Sequelize.fn("SUM", Sequelize.col("amount")), "amounts"],
+    ],
+    group: ["category"],
+  })
+    .then((income) => {
+      res.json(income);
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+};
+
+exports.getIncomeByDate = (req, res) => {
+  console.log(req.body);
+  Income.findAll({
+    where: {
+      username: req.body.username,
+      recorddate: req.body.recorddate,
+    },
+    attributes: ["id", "category", "recorddate", "amount"],
+  })
+    .then((income) => {
+      res.json(income);
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+};
+
+//get sum of each day's income given year and month
+exports.getSumIncomeByMon = (req, res) => {
+  console.log(req.body);
+  Income.findAll({
+    where: {
+      username: req.body.username,
+      recordyear: req.body.year,
+      recordmonth: req.body.month,
+    },
+    attributes: [
+      "recorddate",
+      [Sequelize.fn("SUM", Sequelize.col("amount")), "amounts"],
+    ],
+    group: ["recorddate"],
+  })
+    .then((income) => {
+      res.json(income);
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+};
