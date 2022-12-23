@@ -4,7 +4,6 @@ const API_URL = "http://localhost:8080/api/income/";
 
 class IncomeService {
   async getAllIncome(username) {
-    console.log(username);
     return axios.post(API_URL + "all", { username }).then((response) => {
       return response.data;
     });

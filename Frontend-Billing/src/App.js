@@ -10,6 +10,7 @@ import Register from "./components/register.component";
 import Home from "./components/home.component";
 import Profile from "./components/profile.component";
 import Dashboard from "./components/dashboard.component";
+import ListView from "./components/listview.component";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(undefined);
@@ -80,6 +81,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/list" element={<ListView />} />
         </Routes>
       </div>
     </div>
