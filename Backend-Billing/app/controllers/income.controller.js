@@ -4,6 +4,7 @@ const User = db.user;
 const Income = db.income;
 const Op = db.Sequelize.Op;
 const Sequelize = require("sequelize");
+const { sequelize } = require("../models");
 
 exports.getIncomeByUser = (req, res) => {
   console.log(req.body);
@@ -11,7 +12,14 @@ exports.getIncomeByUser = (req, res) => {
     where: {
       username: req.body.username,
     },
-    attributes: ["id", "category", "recorddate", "amount", "notes"],
+    attributes: [
+      "id",
+      "category",
+      "recorddate",
+      "amount",
+      "notes",
+      [sequelize.literal("'Income'"), "datatype"],
+    ],
   })
     .then((income) => {
       res.json(income);
@@ -67,7 +75,14 @@ exports.getAllIncomeByMonth = (req, res) => {
       recordyear: req.body.year,
       recordmonth: req.body.month,
     },
-    attributes: ["category", "recorddate", "amount"],
+    attributes: [
+      "id",
+      "category",
+      "recorddate",
+      "amount",
+      "notes",
+      [sequelize.literal("'Income'"), "datatype"],
+    ],
   })
     .then((income) => {
       res.status(200).send({ message: "Success", data: res.json(income) });
@@ -107,7 +122,14 @@ exports.getIncomeByDate = (req, res) => {
       username: req.body.username,
       recorddate: req.body.recorddate,
     },
-    attributes: ["id", "category", "recorddate", "amount"],
+    attributes: [
+      "id",
+      "category",
+      "recorddate",
+      "amount",
+      "notes",
+      [sequelize.literal("'Income'"), "datatype"],
+    ],
   })
     .then((income) => {
       res.json(income);

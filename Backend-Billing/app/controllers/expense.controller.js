@@ -4,6 +4,7 @@ const User = db.user;
 const Expense = db.expense;
 const Op = db.Sequelize.Op;
 const Sequelize = require("sequelize");
+const { sequelize } = require("../models");
 
 //get all the expense data of the user
 exports.getExpenseByUser = (req, res) => {
@@ -12,7 +13,14 @@ exports.getExpenseByUser = (req, res) => {
     where: {
       username: req.body.username,
     },
-    attributes: ["category", "recorddate", "amount", "notes"],
+    attributes: [
+      "id",
+      "category",
+      "recorddate",
+      "amount",
+      "notes",
+      [sequelize.literal("'Expense'"), "datatype"],
+    ],
   })
     .then((expense) => {
       res.json(expense);
@@ -70,7 +78,14 @@ exports.getAllExpenseByMonth = (req, res) => {
       recordyear: req.body.year,
       recordmonth: req.body.month,
     },
-    attributes: ["category", "recorddate", "amount"],
+    attributes: [
+      "id",
+      "category",
+      "recorddate",
+      "amount",
+      "notes",
+      [sequelize.literal("'Expense'"), "datatype"],
+    ],
   })
     .then((expense) => {
       res.json(expense);
@@ -110,7 +125,14 @@ exports.getExpenseByDate = (req, res) => {
       username: req.body.username,
       recorddate: req.body.recorddate,
     },
-    attributes: ["id", "category", "recorddate", "amount"],
+    attributes: [
+      "id",
+      "category",
+      "recorddate",
+      "amount",
+      "notes",
+      [sequelize.literal("'Expense'"), "datatype"],
+    ],
   })
     .then((expense) => {
       res.json(expense);
