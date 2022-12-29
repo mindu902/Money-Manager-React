@@ -8,6 +8,12 @@ import TypeCategoryDropDown from "../common/typecategoryDropdown";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import Pagination from "react-bootstrap/Pagination";
+import Card from "react-bootstrap/Card";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
+import { Navbar, FormControl, Button } from "react-bootstrap";
+import "../styles/listview.css";
 
 function ListView() {
   const [records, setRecords] = useState([]);
@@ -23,6 +29,21 @@ function ListView() {
 
   //for filter certain keywords
   const [keyword, setKeyword] = useState("");
+
+  //pagination
+  const [pagesize, setPagesize] = useState(4);
+  const [currpage, setCurrpage] = useState(1);
+  let endIndex = currpage * pagesize;
+  let startIndex = endIndex - pagesize;
+  let totalPages = filteredrecords
+    ? Math.ceil(filteredrecords.length / pagesize)
+    : Math.ceil(records.length / pagesize);
+  let pagesArr = [];
+  for (let number = 1; number <= totalPages; number++) {
+    pagesArr.push(number);
+  }
+  // let currpageData = filteredrecords.slice(startIndex, endIndex);
+  const [currpageData, setCurrpageData] = useState([]);
 
   const updateDaterange = (type, date) => {
     if (type === "start") {
@@ -55,6 +76,10 @@ function ListView() {
     getAllRecords();
   }, []);
 
+  useEffect(() => {
+    setCurrpageData(filteredrecords.slice(startIndex, endIndex));
+  }, [filteredrecords, currpage]);
+
   const filterRecords = () => {
     let formatStart = moment(startDate).format("YYYY-MM-DD");
     let formatEnd = moment(endDate).format("YYYY-MM-DD");
@@ -77,6 +102,7 @@ function ListView() {
       );
     });
     setFilteredrecords(filteredData);
+    setCurrpage(1);
   };
 
   const clearFilters = () => {
@@ -88,56 +114,104 @@ function ListView() {
     setKeyword("");
   };
 
+  const changePageContent = (pag) => {
+    setCurrpage(pag);
+  };
+
   return (
-    <div>
-      <TypeCategoryDropDown
-        selecttype={selecttype}
-        selectcategory={selectcategory}
-        updateType={updateType}
-        updateCategory={updateCategory}
-      ></TypeCategoryDropDown>
+    <div className={"listviewbox"}>
+      <Card className={"filterbox"}>
+        <Row>
+          <b className={"totalbox"}>Total: {filteredrecords.length}</b>
+        </Row>
+        <Row>
+          <Col md={3}>
+            <TypeCategoryDropDown
+              selecttype={selecttype}
+              selectcategory={selectcategory}
+              updateType={updateType}
+              updateCategory={updateCategory}
+            ></TypeCategoryDropDown>
+          </Col>
 
-      <DateRangePicker
-        startDate={startDate}
-        endDate={endDate}
-        updateDaterange={updateDaterange}
-      ></DateRangePicker>
+          <Col md={4}>
+            <DateRangePicker
+              startDate={startDate}
+              endDate={endDate}
+              updateDaterange={updateDaterange}
+            ></DateRangePicker>
+          </Col>
 
-      <InputGroup>
-        <Form.Control
-          type="text"
-          value={keyword}
-          onChange={changeInput}
-          placeholder="Enter keyword to search in notes"
-        />
-      </InputGroup>
+          <Col md={3}>
+            <InputGroup>
+              <Form.Control
+                className={"inputbox"}
+                type="text"
+                value={keyword}
+                onChange={changeInput}
+                placeholder="Keywords in Notes"
+              />
+            </InputGroup>
+          </Col>
 
-      <button onClick={filterRecords}>Search</button>
-      <button onClick={clearFilters}>Clear</button>
-      <Table striped>
-        <thead>
-          <tr>
-            <th>Type</th>
-            <th>Category</th>
-            <th>Amount</th>
-            <th>Notes</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredrecords
-            ? filteredrecords.map((record, indx) => (
-                <tr key={indx}>
-                  <td>{record.datatype}</td>
-                  <td>{record.category}</td>
-                  <td>{record.amount}</td>
-                  <td>{record.notes}</td>
-                  <td>{record.recorddate}</td>
-                </tr>
-              ))
-            : ["No Data"]}
-        </tbody>
-      </Table>
+          <Col>
+            <Button className={"searchbox"} onClick={filterRecords}>
+              Search
+            </Button>
+
+            <Button className={"searchbox"} onClick={clearFilters}>
+              Clear
+            </Button>
+          </Col>
+        </Row>
+      </Card>
+
+      <Card className={"filterbox"}>
+        <Row>
+          <Table striped responsive>
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Notes</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currpageData
+                ? currpageData.map((record, indx) => (
+                    <tr key={indx}>
+                      <td>{record.datatype}</td>
+                      <td>{record.category}</td>
+                      <td>{record.amount}</td>
+                      <td>{record.notes}</td>
+                      <td>{record.recorddate}</td>
+                    </tr>
+                  ))
+                : ["No Data"]}
+            </tbody>
+          </Table>
+        </Row>
+      </Card>
+
+      <Row>
+        <Pagination className={"totalbox"}>
+          {pagesArr.map((pag) => {
+            return (
+              <Pagination.Item
+                key={pag}
+                onClick={() => {
+                  changePageContent(pag);
+                }}
+                active={pag === currpage}
+              >
+                {pag}
+              </Pagination.Item>
+            );
+          })}
+        </Pagination>
+      </Row>
     </div>
   );
 }

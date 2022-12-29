@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
+import { Navbar, Nav } from "react-bootstrap";
 
 import AuthService from "./services/auth.service";
 
@@ -11,6 +12,7 @@ import Home from "./components/home.component";
 import Profile from "./components/profile.component";
 import Dashboard from "./components/dashboard.component";
 import ListView from "./components/listview.component";
+import NavDropdown from "react-bootstrap/NavDropdown";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(undefined);
@@ -29,50 +31,36 @@ function App() {
 
   return (
     <div>
-      <nav className="navbar navbar-expand-lg">
-        <div className="navbar-nav mr-auto">
-          {currentUser ? (
-            <li className="nav-item">
-              <Link to={"/dashboard"} className="navbar-brand">
-                My Dashboard
-              </Link>
-            </li>
-          ) : (
-            <Link to={"/"} className="navbar-brand">
-              Money Manager
-            </Link>
-          )}
-        </div>
-
+      <Navbar>
         {currentUser ? (
-          <div className="navbar-nav ml-auto">
-            <li className="nav-item">
-              <Link to={"/profile"} className="nav-link">
-                {currentUser.username}
-              </Link>
-            </li>
-            <li className="nav-item">
-              <a href="/login" className="nav-link" onClick={logOut}>
-                LogOut
-              </a>
-            </li>
-          </div>
+          <Navbar.Brand href="/dashboard">Dashboard</Navbar.Brand>
         ) : (
-          <div className="navbar-nav ml-auto">
-            <li className="nav-item">
-              <Link to={"/login"} className="nav-link">
-                Login
-              </Link>
-            </li>
-
-            <li className="nav-item">
-              <Link to={"/register"} className="nav-link">
-                Sign Up
-              </Link>
-            </li>
-          </div>
+          <Navbar.Brand href="/">Money Manager</Navbar.Brand>
         )}
-      </nav>
+
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse className="justify-content-end">
+          <Nav>
+            {currentUser ? (
+              <Nav className="mr-auto">
+                <Nav.Link href="/list">List View</Nav.Link>
+                <NavDropdown title="Account" id="basic-nav-dropdown">
+                  <NavDropdown.Item href="/profile">
+                    {currentUser.username}
+                  </NavDropdown.Item>
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item onClick={logOut}>LogOut</NavDropdown.Item>
+                </NavDropdown>
+              </Nav>
+            ) : (
+              <Nav className="mr-auto">
+                <Nav.Link href="/login">Login</Nav.Link>
+                <Nav.Link href="/register">Sign Up</Nav.Link>
+              </Nav>
+            )}
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
 
       <div>
         <Routes>

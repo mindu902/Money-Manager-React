@@ -28,45 +28,46 @@ function Dashboard() {
   return (
     <Container fluid>
       <Row>
-        {/* left side of Dashboard */}
         <Col md={8}>
-          <Row className={"widgets"}>
-            <Col>
+          <Row>
+            <Col md={4}>
               <IncomeWidget month={month} year={year}></IncomeWidget>
             </Col>
 
-            <Col>
+            <Col md={4}>
               <ExpenseWidget month={month} year={year}></ExpenseWidget>
             </Col>
 
-            <Col>
+            <Col md={4}>
               <BalanceWidget month={month} year={year}></BalanceWidget>
             </Col>
           </Row>
 
           <Row>
-            <BarChart
-              month={month}
-              year={year}
-              selectdate={selectdate}
-            ></BarChart>
+            <Col md={12}>
+              <BarChart
+                month={month}
+                year={year}
+                selectdate={selectdate}
+              ></BarChart>
+            </Col>
           </Row>
 
           <Row>
-            <DoughnutChart
-              month={month}
-              year={year}
-              selectdate={selectdate}
-            ></DoughnutChart>
+            <Col md={12}>
+              <DoughnutChart
+                month={month}
+                year={year}
+                selectdate={selectdate}
+              ></DoughnutChart>
+            </Col>
           </Row>
         </Col>
-
-        <Col md={{ span: 3 }}>
+        <Col md={4}>
           <CalenderTable changeMonyear={changeMonyear}></CalenderTable>
-
-          <AddButton></AddButton>
         </Col>
       </Row>
+      <AddButton></AddButton>
     </Container>
   );
 }

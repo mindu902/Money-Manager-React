@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import Calendar from "react-calendar";
 import Table from "react-bootstrap/Table";
 import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import { Card } from "react-bootstrap";
+
 import "../styles/dashboard.css";
 import "../styles/calendar.css";
 import moment from "moment";
@@ -63,43 +66,46 @@ function CalenderTable(props) {
 
   return (
     <div>
-      <Row>
-        <Calendar
-          onChange={handleChange}
-          tileClassName={({ date, view }) => {
-            if (marks.has(moment(date).format("YYYY-MM-DD"))) {
-              return "highlight-days";
-            }
-          }}
-        />
-      </Row>
-      <Row>
-        <Table hover>
-          <thead>
-            <tr>
-              <th>
-                {currdate} {weekdays[moment(currdate).weekday()]}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {incomes.income &&
-              incomes.income.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.category}</td>
-                  <td style={{ color: "blue" }}>+{item.amount}</td>
-                </tr>
-              ))}
-            {expenses.expense &&
-              expenses.expense.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.category}</td>
-                  <td style={{ color: "red" }}>-{item.amount}</td>
-                </tr>
-              ))}
-          </tbody>
-        </Table>
-      </Row>
+      <Col>
+        <Row>
+          <Calendar
+            onChange={handleChange}
+            tileClassName={({ date, view }) => {
+              if (marks.has(moment(date).format("YYYY-MM-DD"))) {
+                return "highlight-days";
+              }
+            }}
+          />
+        </Row>
+
+        <Row>
+          <Table hover className={"calendertable"}>
+            <thead>
+              <tr>
+                <th>
+                  {currdate} {weekdays[moment(currdate).weekday()]}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {incomes.income &&
+                incomes.income.map((item) => (
+                  <tr key={item.id}>
+                    <td>{item.category}</td>
+                    <td style={{ color: "blue" }}>+{item.amount}</td>
+                  </tr>
+                ))}
+              {expenses.expense &&
+                expenses.expense.map((item) => (
+                  <tr key={item.id}>
+                    <td>{item.category}</td>
+                    <td style={{ color: "red" }}>-{item.amount}</td>
+                  </tr>
+                ))}
+            </tbody>
+          </Table>
+        </Row>
+      </Col>
     </div>
   );
 }

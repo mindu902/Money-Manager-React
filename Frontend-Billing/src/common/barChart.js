@@ -13,6 +13,7 @@ import { Bar } from "react-chartjs-2";
 import moment from "moment";
 import IncomeService from "../services/income.service";
 import ExpenseService from "../services/expense.service";
+import Card from "react-bootstrap/Card";
 
 ChartJS.register(
   CategoryScale,
@@ -105,9 +106,9 @@ function BarChart(props) {
   }, [props.month, props.year, numofdays]);
 
   return (
-    <div className="chart-bar">
+    <Card className="chart-bar">
       <Bar options={options} data={data} />
-    </div>
+    </Card>
   );
 }
 

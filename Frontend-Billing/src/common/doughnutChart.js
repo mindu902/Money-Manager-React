@@ -8,8 +8,11 @@ import {
   Title,
 } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
+import Card from "react-bootstrap/Card";
+
 import IncomeService from "../services/income.service";
 import ExpenseService from "../services/expense.service";
+import { Col, Row } from "react-bootstrap";
 
 ChartJS2.register(ArcElement, Tooltip, Legend, Title);
 
@@ -118,17 +121,21 @@ function DoughnutChart(props) {
 
   return (
     <div>
-      <div className="doughnut-container">
-        <div className="income-chart-doughnut">
-          {" "}
-          <Doughnut options={Incomeoptions} data={incomedata} />
-        </div>
+      <Row>
+        <Col md={6}>
+          <Card className="chart-doughnut">
+            {" "}
+            <Doughnut options={Incomeoptions} data={incomedata} />
+          </Card>
+        </Col>
 
-        <div className="expense-chart-doughnut">
-          {" "}
-          <Doughnut options={Expenseoptions} data={expensedata} />
-        </div>
-      </div>
+        <Col md={6}>
+          <Card className="chart-doughnut">
+            {" "}
+            <Doughnut options={Expenseoptions} data={expensedata} />
+          </Card>
+        </Col>
+      </Row>
     </div>
   );
 }

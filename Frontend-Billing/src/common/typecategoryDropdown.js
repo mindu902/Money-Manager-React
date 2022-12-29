@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Dropdown from "react-bootstrap/Dropdown";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import "../styles/listview.css";
 
 function TypeCategoryDropDown(props) {
   const incomeCatArr = [
@@ -29,7 +32,7 @@ function TypeCategoryDropDown(props) {
         props.updateType(value);
       }}
     >
-      <Dropdown.Toggle id="dropdown-basic">
+      <Dropdown.Toggle id="dropdown-basic" className={"dropdownbutton"}>
         {props.selecttype ? props.selecttype : "Data Type"}
       </Dropdown.Toggle>
 
@@ -50,7 +53,7 @@ function TypeCategoryDropDown(props) {
         props.updateCategory(value);
       }}
     >
-      <Dropdown.Toggle id="dropdown-basic">
+      <Dropdown.Toggle id="dropdown-basic" className={"dropdownbutton"}>
         {props.selectcategory ? props.selectcategory : "Category"}
       </Dropdown.Toggle>
 
@@ -66,10 +69,15 @@ function TypeCategoryDropDown(props) {
 
   return (
     <div>
-      {typeDropdown}
-      {props.selecttype === "Income"
-        ? incomecategoryDropdown(incomeCatArr)
-        : incomecategoryDropdown(expenseCatArr)}
+      <Row>
+        <Col>{typeDropdown}</Col>
+
+        <Col>
+          {props.selecttype === "Income"
+            ? incomecategoryDropdown(incomeCatArr)
+            : incomecategoryDropdown(expenseCatArr)}
+        </Col>
+      </Row>
     </div>
   );
 }
