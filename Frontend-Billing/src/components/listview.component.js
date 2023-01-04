@@ -90,8 +90,8 @@ function ListView() {
 
     const filteredData = records.filter((item) => {
       return (
-        (!isNaN(formatStart) || item.recorddate >= formatStart) &&
-        (!isNaN(formatEnd) || item.recorddate <= formatEnd) &&
+        (item.recorddate >= formatStart || !isNaN(formatStart)) &&
+        (item.recorddate <= formatEnd || !isNaN(formatEnd)) &&
         (selecttype === "" || item.datatype === selecttype) &&
         (selectcategory === "" || item.category === selectcategory) &&
         item.notes
@@ -117,6 +117,43 @@ function ListView() {
   const changePageContent = (pag) => {
     setCurrpage(pag);
   };
+
+  //create pagination items
+  let PaginationItems = [];
+  if (currpage > 1) {
+    PaginationItems.push(
+      <Pagination.Prev
+        key="prev"
+        onClick={() => {
+          changePageContent(currpage - 1);
+        }}
+      />
+    );
+  }
+  for (let page = 1; page <= totalPages; page++) {
+    PaginationItems.push(
+      <Pagination.Item
+        key={page}
+        active={page === currpage}
+        onClick={() => {
+          changePageContent(page);
+        }}
+      >
+        {page}
+      </Pagination.Item>
+    );
+  }
+
+  if (currpage < totalPages) {
+    PaginationItems.push(
+      <Pagination.Next
+        key="next"
+        onClick={() => {
+          changePageContent(currpage + 1);
+        }}
+      />
+    );
+  }
 
   return (
     <div className={"listviewbox"}>
@@ -166,7 +203,7 @@ function ListView() {
         </Row>
       </Card>
 
-      <Card className={"filterbox"}>
+      <Card className={"tablebox"}>
         <Row>
           <Table striped responsive>
             <thead>
@@ -196,21 +233,7 @@ function ListView() {
       </Card>
 
       <Row>
-        <Pagination className={"totalbox"}>
-          {pagesArr.map((pag) => {
-            return (
-              <Pagination.Item
-                key={pag}
-                onClick={() => {
-                  changePageContent(pag);
-                }}
-                active={pag === currpage}
-              >
-                {pag}
-              </Pagination.Item>
-            );
-          })}
-        </Pagination>
+        <Pagination className={"totalbox"}>{PaginationItems}</Pagination>
       </Row>
     </div>
   );
