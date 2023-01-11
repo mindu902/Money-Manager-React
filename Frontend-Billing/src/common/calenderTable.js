@@ -39,15 +39,18 @@ function CalenderTable() {
     0: "Sunday",
   };
 
-  useEffect(() => {
+  const getSelectedDateIncome = (username, date) => {
     IncomeService.getIncomeByDate(username, date).then((response) => {
       setIncomes({ income: response });
     });
+  };
 
+  const getSelectedDateExpense = (username, date) =>
     ExpenseService.getExpenseByDate(username, date).then((response) => {
       setExpenses({ expense: response });
     });
 
+  const markCalenderDates = (username) => {
     IncomeService.getAllIncome(username).then((response) => {
       response.forEach((element) => {
         setMarks(
@@ -63,6 +66,12 @@ function CalenderTable() {
         );
       });
     });
+  };
+
+  useEffect(() => {
+    getSelectedDateIncome(username, date);
+    getSelectedDateExpense(username, date);
+    markCalenderDates(username);
   }, [date]);
 
   const handleChange = (value) => {

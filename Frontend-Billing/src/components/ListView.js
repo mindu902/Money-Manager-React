@@ -11,8 +11,7 @@ import Pagination from "react-bootstrap/Pagination";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Container from "react-bootstrap/Container";
-import { Navbar, FormControl, Button } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import "../styles/listview.css";
 
 function ListView() {
@@ -212,6 +211,7 @@ function ListView() {
                 <th>Amount</th>
                 <th>Notes</th>
                 <th>Date</th>
+                <th>Operation</th>
               </tr>
             </thead>
             <tbody>
@@ -223,6 +223,22 @@ function ListView() {
                       <td>{record.amount}</td>
                       <td>{record.notes}</td>
                       <td>{record.recorddate}</td>
+                      <td>
+                        <button
+                          onClick={() => {
+                            console.log(record);
+                          }}
+                        >
+                          Delete
+                        </button>
+                        <button
+                          onClick={() => {
+                            console.log(record);
+                          }}
+                        >
+                          Edit
+                        </button>
+                      </td>
                     </tr>
                   ))
                 : ["No Data"]}
