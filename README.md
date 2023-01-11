@@ -1,6 +1,4 @@
-# Project Title
-
-Money-Manager
+# Money-Manager
 
 ## Description
 
