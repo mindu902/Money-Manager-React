@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import "../styles/dashboard.css";
 import Card from "react-bootstrap/Card";
 import ExpenseService from "../services/expense.service";
@@ -8,10 +9,10 @@ function BalanceWidget(props) {
   const [monthlybalance, setMonthlybalance] = useState(0);
   const [monthlyincome, setMonthlyincome] = useState(0);
   const [monthlyexpense, setMonthlyexpense] = useState(0);
-
+  const username = useSelector((state) => {
+    return state.auth.user.username;
+  });
   useEffect(() => {
-    const username = JSON.parse(localStorage.getItem("user")).username;
-
     IncomeService.getIncomeByMonth(username, props.year, props.month).then(
       (response) => {
         if (response[0].amounts) {

@@ -8,15 +8,18 @@ import FormControl from "react-bootstrap/FormControl";
 import Modal from "react-bootstrap/Modal";
 import moment from "moment";
 import ExpenseService from "../services/expense.service";
+import { useSelector } from "react-redux";
 
 function AddExpense(props) {
   const [category, setCategory] = useState("");
   const [amount, setAmount] = useState(0);
   const [recorddate, setRecorddate] = useState("");
   const [notes, setNotes] = useState("");
+  const username = useSelector((state) => {
+    return state.auth.user.username;
+  });
 
   const submitForm = () => {
-    let username = JSON.parse(localStorage.getItem("user")).username;
     let recordmonth = moment(recorddate).month() + 1;
     let recordyear = moment(recorddate).year();
     ExpenseService.addExpense(

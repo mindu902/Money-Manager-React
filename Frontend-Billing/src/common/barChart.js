@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import "../styles/dashboard.css";
 import {
   Chart as ChartJS,
@@ -34,7 +35,9 @@ const generateLabels = (numofdays) => {
 };
 
 function BarChart(props) {
-  const username = JSON.parse(localStorage.getItem("user")).username;
+  const username = useSelector((state) => {
+    return state.auth.user.username;
+  });
   const today = moment().format("YYYY-MM-DD");
   const month = moment(props.month, "MM").format("MMMM");
   const [labels, setLabels] = useState([]);

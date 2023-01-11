@@ -2,13 +2,16 @@ import React, { useEffect, useState } from "react";
 import "../styles/dashboard.css";
 import Card from "react-bootstrap/Card";
 import IncomeService from "../services/income.service";
+import { useSelector } from "react-redux";
 
 function IncomeWidget(props) {
   const [monthlyincome, setMonthlyincome] = useState(0);
+  const username = useSelector((state) => {
+    return state.auth.user.username;
+  });
 
   useEffect(() => {
-    const username = JSON.parse(localStorage.getItem("user")).username;
-
+    console.log(username);
     IncomeService.getIncomeByMonth(username, props.year, props.month).then(
       (response) => {
         if (response[0].amounts) {

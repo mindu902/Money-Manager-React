@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import Calendar from "react-calendar";
 import Table from "react-bootstrap/Table";
 import Row from "react-bootstrap/Row";
@@ -12,6 +13,9 @@ import IncomeService from "../services/income.service";
 import ExpenseService from "../services/expense.service";
 
 function CalenderTable(props) {
+  const username = useSelector((state) => {
+    return state.auth.user.username;
+  });
   const today = moment().format("YYYY-MM-DD");
   const [incomes, setIncomes] = useState({ income: [] });
   const [expenses, setExpenses] = useState({ expense: [] });
@@ -29,8 +33,6 @@ function CalenderTable(props) {
   };
 
   useEffect(() => {
-    const username = JSON.parse(localStorage.getItem("user")).username;
-
     IncomeService.getIncomeByDate(username, currdate).then((response) => {
       setIncomes({ income: response });
     });

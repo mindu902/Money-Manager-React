@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import "../styles/dashboard.css";
 import {
   Legend,
@@ -17,11 +18,13 @@ import { Col, Row } from "react-bootstrap";
 ChartJS2.register(ArcElement, Tooltip, Legend, Title);
 
 function DoughnutChart(props) {
+  const username = useSelector((state) => {
+    return state.auth.user.username;
+  });
   const [incomelabels, setIncomeLabels] = useState([]);
   const [incomecontent, setIncomeContent] = useState([]);
   const [expenselabels, setExpenseLabels] = useState([]);
   const [expensecontent, setExpenseContent] = useState([]);
-  const username = JSON.parse(localStorage.getItem("user")).username;
 
   const Incomeoptions = {
     maintainAspectRatio: false,
