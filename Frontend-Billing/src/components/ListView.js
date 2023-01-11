@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import IncomeService from "../services/income.service";
 import ExpenseService from "../services/expense.service";
-import moment from "moment";
 import ListDateRangePicker from "../common/ListDateRangePicker";
 import ListTypeCategoryDropdown from "../common/ListTypeCategoryDropdown";
 import Form from "react-bootstrap/Form";
@@ -13,22 +12,28 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { Button } from "react-bootstrap";
 import "../styles/listview.css";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  clearSearchTerms,
+  updateKeyword,
+  setinitialData,
+  filterData,
+} from "../store/listdataSlice";
 
 function ListView() {
+  const dispatch = useDispatch();
   const [records, setRecords] = useState([]);
-  const [filteredrecords, setFilteredrecords] = useState([]);
-
-  //for filter data by date range
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-
-  //for filter data by type
-  const [selecttype, setSelecttype] = useState("");
-  const [selectcategory, setSelectcategory] = useState("");
-
-  //for filter certain keywords
-  const [keyword, setKeyword] = useState("");
-
+  const { filteredrecords, keyword, username } = useSelector((state) => {
+    return {
+      filteredrecords: state.listdata.data,
+      startDate: state.listdata.searchTerms.startDate,
+      endDate: state.listdata.searchTerms.endDate,
+      selecttype: state.listdata.searchTerms.selecttype,
+      selectcategory: state.listdata.searchTerms.selectcategory,
+      keyword: state.listdata.searchTerms.keyword,
+      username: state.auth.user.username,
+    };
+  });
   //pagination
   const [pagesize, setPagesize] = useState(4);
   const [currpage, setCurrpage] = useState(1);
@@ -43,31 +48,15 @@ function ListView() {
   }
   const [currpageData, setCurrpageData] = useState([]);
 
-  const updateDaterange = (type, date) => {
-    if (type === "start") {
-      setStartDate(date);
-    } else {
-      setEndDate(date);
-    }
-  };
-
-  const updateType = (selecttype) => {
-    setSelecttype(selecttype);
-  };
-
-  const updateCategory = (selectcat) => {
-    setSelectcategory(selectcat);
-  };
-
   const changeInput = (e) => {
-    setKeyword(e.target.value);
+    dispatch(updateKeyword(e.target.value));
   };
 
   const getAllRecords = async () => {
-    const incomedata = await IncomeService.getAllIncome("joydu123");
-    const expensedata = await ExpenseService.getAllExpense("joydu123");
+    const incomedata = await IncomeService.getAllIncome(username);
+    const expensedata = await ExpenseService.getAllExpense(username);
     setRecords([...incomedata, ...expensedata]);
-    setFilteredrecords([...incomedata, ...expensedata]);
+    dispatch(setinitialData([...incomedata, ...expensedata]));
   };
 
   useEffect(() => {
@@ -79,37 +68,13 @@ function ListView() {
   }, [filteredrecords, currpage]);
 
   const filterRecords = () => {
-    let formatStart = moment(startDate).format("YYYY-MM-DD");
-    let formatEnd = moment(endDate).format("YYYY-MM-DD");
-    let cleanedKeyword = keyword
-      .split(/[^\w\s]/gi)
-      .join("")
-      .toLowerCase();
-
-    const filteredData = records.filter((item) => {
-      return (
-        (item.recorddate >= formatStart || !isNaN(formatStart)) &&
-        (item.recorddate <= formatEnd || !isNaN(formatEnd)) &&
-        (selecttype === "" || item.datatype === selecttype) &&
-        (selectcategory === "" || item.category === selectcategory) &&
-        item.notes
-          .split(/[^\w\s]/gi)
-          .join("")
-          .toLowerCase()
-          .includes(cleanedKeyword)
-      );
-    });
-    setFilteredrecords(filteredData);
+    dispatch(filterData());
     setCurrpage(1);
   };
 
   const clearFilters = () => {
-    setFilteredrecords(records);
-    setStartDate(new Date());
-    setEndDate(new Date());
-    setSelecttype("");
-    setSelectcategory("");
-    setKeyword("");
+    dispatch(setinitialData(records));
+    dispatch(clearSearchTerms());
   };
 
   const changePageContent = (pag) => {
@@ -161,20 +126,11 @@ function ListView() {
         </Row>
         <Row>
           <Col md={3}>
-            <ListTypeCategoryDropdown
-              selecttype={selecttype}
-              selectcategory={selectcategory}
-              updateType={updateType}
-              updateCategory={updateCategory}
-            ></ListTypeCategoryDropdown>
+            <ListTypeCategoryDropdown></ListTypeCategoryDropdown>
           </Col>
 
           <Col md={4}>
-            <ListDateRangePicker
-              startDate={startDate}
-              endDate={endDate}
-              updateDaterange={updateDaterange}
-            ></ListDateRangePicker>
+            <ListDateRangePicker></ListDateRangePicker>
           </Col>
 
           <Col md={3}>
@@ -224,20 +180,24 @@ function ListView() {
                       <td>{record.notes}</td>
                       <td>{record.recorddate}</td>
                       <td>
-                        <button
-                          onClick={() => {
-                            console.log(record);
-                          }}
-                        >
-                          Delete
-                        </button>
-                        <button
+                        <Button
+                          variant="secondary"
+                          size="sm"
                           onClick={() => {
                             console.log(record);
                           }}
                         >
                           Edit
-                        </button>
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="danger"
+                          onClick={() => {
+                            console.log(record);
+                          }}
+                        >
+                          Delete
+                        </Button>
                       </td>
                     </tr>
                   ))

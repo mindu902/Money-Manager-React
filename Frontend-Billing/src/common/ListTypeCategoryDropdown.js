@@ -3,8 +3,24 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import "../styles/listview.css";
+import { useSelector, useDispatch } from "react-redux";
+import { updateType, updateCategory } from "../store/listdataSlice";
 
-function ListTypeCategoryDropdown(props) {
+function ListTypeCategoryDropdown() {
+  const dispatch = useDispatch();
+  const { selecttype, selectcategory } = useSelector((state) => {
+    return {
+      selecttype: state.listdata.searchTerms.selecttype,
+      selectcategory: state.listdata.searchTerms.selectcategory,
+    };
+  });
+
+  const changeType = (value) => {
+    dispatch(updateType(value));
+  };
+  const changeCategory = (value) => {
+    dispatch(updateCategory(value));
+  };
   const incomeCatArr = [
     "Salary",
     "Refund",
@@ -29,11 +45,11 @@ function ListTypeCategoryDropdown(props) {
   const typeDropdown = (
     <Dropdown
       onSelect={(value) => {
-        props.updateType(value);
+        changeType(value);
       }}
     >
       <Dropdown.Toggle id="dropdown-basic" className={"dropdownbutton"}>
-        {props.selecttype ? props.selecttype : "Data Type"}
+        {selecttype ? selecttype : "Data Type"}
       </Dropdown.Toggle>
 
       <Dropdown.Menu>
@@ -50,11 +66,11 @@ function ListTypeCategoryDropdown(props) {
   const incomecategoryDropdown = (arr) => (
     <Dropdown
       onSelect={(value) => {
-        props.updateCategory(value);
+        changeCategory(value);
       }}
     >
       <Dropdown.Toggle id="dropdown-basic" className={"dropdownbutton"}>
-        {props.selectcategory ? props.selectcategory : "Category"}
+        {selectcategory ? selectcategory : "Category"}
       </Dropdown.Toggle>
 
       <Dropdown.Menu>
@@ -73,7 +89,7 @@ function ListTypeCategoryDropdown(props) {
         <Col>{typeDropdown}</Col>
 
         <Col>
-          {props.selecttype === "Income"
+          {selecttype === "Income"
             ? incomecategoryDropdown(incomeCatArr)
             : incomecategoryDropdown(expenseCatArr)}
         </Col>
