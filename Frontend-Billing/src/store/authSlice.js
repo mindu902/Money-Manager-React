@@ -40,6 +40,7 @@ const authSlice = createSlice({
     });
     builders.addCase(login.rejected, (state, action) => {
       state.isLoggedIn = false;
+      state.user = null;
     });
     builders.addCase(register.fulfilled, (state, action) => {
       state.isLoggedIn = false;

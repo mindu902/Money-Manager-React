@@ -34,16 +34,22 @@ const generateLabels = (numofdays) => {
   return temp;
 };
 
-function BarChart(props) {
+function ChartBar() {
   const username = useSelector((state) => {
     return state.auth.user.username;
   });
-  const today = moment().format("YYYY-MM-DD");
-  const month = moment(props.month, "MM").format("MMMM");
+  const { date, month, year } = useSelector((state) => {
+    return {
+      date: state.date.date,
+      month: state.date.month,
+      year: state.date.year,
+    };
+  });
   const [labels, setLabels] = useState([]);
-  const [numofdays, setNumofDays] = useState(moment(today).daysInMonth());
+  const [numofdays, setNumofDays] = useState(moment(date).daysInMonth());
   const [incomes, setIncomes] = useState([]);
   const [expenses, setExpenses] = useState([]);
+  const display_month = moment(month, "MM").format("MMMM");
 
   const options = {
     maintainAspectRatio: false,
@@ -51,7 +57,7 @@ function BarChart(props) {
     plugins: {
       title: {
         display: true,
-        text: `Distribution of income and expenses in ${month} `,
+        text: `Distribution of income and expenses in ${display_month} `,
         align: "center",
         padding: {
           bottom: 10,
@@ -79,24 +85,19 @@ function BarChart(props) {
     ],
   };
 
-  useEffect(() => {
-    setNumofDays(moment(props.selectdate).daysInMonth());
-    setLabels(generateLabels(numofdays));
-
+  const getTotalIncomeByMonth = (username, year, month) => {
     let initialData = new Array(numofdays).fill(0);
-    IncomeService.getSumIncomeByMon(username, props.year, props.month).then(
-      (response) => {
-        response.forEach((item) => {
-          initialData[moment(item.recorddate).date() - 1] = Number(
-            item.amounts
-          );
-          setIncomes(initialData);
-        });
-      }
-    );
+    IncomeService.getSumIncomeByMon(username, year, month).then((response) => {
+      response.forEach((item) => {
+        initialData[moment(item.recorddate).date() - 1] = Number(item.amounts);
+        setIncomes(initialData);
+      });
+    });
+  };
 
+  const getTotalExpenseByMonth = (username, year, month) => {
     let initialData2 = new Array(numofdays).fill(0);
-    ExpenseService.getSumExpenseByMon(username, props.year, props.month).then(
+    ExpenseService.getSumExpenseByMon(username, year, month).then(
       (response) => {
         response.forEach((item) => {
           initialData2[moment(item.recorddate).date() - 1] = Number(
@@ -106,7 +107,15 @@ function BarChart(props) {
         });
       }
     );
-  }, [props.month, props.year, numofdays]);
+  };
+
+  useEffect(() => {
+    setNumofDays(moment(date).daysInMonth());
+    setLabels(generateLabels(numofdays));
+
+    getTotalIncomeByMonth(username, year, month);
+    getTotalExpenseByMonth(username, year, month);
+  }, [month, year, numofdays]);
 
   return (
     <Card className="chart-bar">
@@ -115,4 +124,4 @@ function BarChart(props) {
   );
 }
 
-export default BarChart;
+export default ChartBar;

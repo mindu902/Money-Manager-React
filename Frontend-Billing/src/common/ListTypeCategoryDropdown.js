@@ -4,7 +4,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import "../styles/listview.css";
 
-function TypeCategoryDropDown(props) {
+function ListTypeCategoryDropdown(props) {
   const incomeCatArr = [
     "Salary",
     "Refund",
@@ -82,4 +82,4 @@ function TypeCategoryDropDown(props) {
   );
 }
 
-export default TypeCategoryDropDown;
+export default ListTypeCategoryDropdown;

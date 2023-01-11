@@ -32,6 +32,7 @@ function AddExpense(props) {
       notes
     ).then((response) => {
       console.log(response);
+      window.location.reload();
     });
 
     props.handleClose();

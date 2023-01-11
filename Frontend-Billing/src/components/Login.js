@@ -1,11 +1,8 @@
-import React, { Component, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
-import CheckButton from "react-validation/build/button";
-
-import AuthService from "../services/auth.service";
 
 import { withRouter } from "../common/with-router";
 import { useNavigate } from "react-router-dom";

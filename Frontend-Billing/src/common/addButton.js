@@ -8,8 +8,8 @@ import Tab from "react-bootstrap/Tab";
 import "../styles/addmodal.css";
 import { MdOutlineAdd } from "react-icons/md";
 
-import AddIncome from "../common/addIncome";
-import AddExpense from "../common/addExpense";
+import AddIncome from "./AddIncome";
+import AddExpense from "./AddExpense";
 
 function AddButton() {
   const [show, setShow] = useState(false);

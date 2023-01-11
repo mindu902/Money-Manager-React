@@ -17,9 +17,15 @@ import { Col, Row } from "react-bootstrap";
 
 ChartJS2.register(ArcElement, Tooltip, Legend, Title);
 
-function DoughnutChart(props) {
+function ChartDoughnut() {
   const username = useSelector((state) => {
     return state.auth.user.username;
+  });
+  const { month, year } = useSelector((state) => {
+    return {
+      month: state.date.month,
+      year: state.date.year,
+    };
   });
   const [incomelabels, setIncomeLabels] = useState([]);
   const [incomecontent, setIncomeContent] = useState([]);
@@ -92,12 +98,11 @@ function DoughnutChart(props) {
     ],
   };
 
-  useEffect(() => {
-    IncomeService.getIncomeByMonthCat(username, props.year, props.month).then(
+  const getIncomeByMonthCategory = (username, year, month) => {
+    IncomeService.getIncomeByMonthCat(username, year, month).then(
       (response) => {
         setIncomeLabels([]);
         setIncomeContent([]);
-        // console.log(response.data.length);
         if (response.data.length !== 0) {
           for (let item of response.data) {
             setIncomeLabels((oldArray) => [...oldArray, item.category]);
@@ -106,12 +111,13 @@ function DoughnutChart(props) {
         }
       }
     );
+  };
 
-    ExpenseService.getExpenseByMonthCat(username, props.year, props.month).then(
+  const getExpenseByMonthCategory = (username, year, month) => {
+    ExpenseService.getExpenseByMonthCat(username, year, month).then(
       (response) => {
         setExpenseLabels([]);
         setExpenseContent([]);
-        // console.log(response.data.length);
         if (response.data.length !== 0) {
           for (let item of response.data) {
             setExpenseLabels((oldArray) => [...oldArray, item.category]);
@@ -120,7 +126,12 @@ function DoughnutChart(props) {
         }
       }
     );
-  }, [props.year, props.month]);
+  };
+
+  useEffect(() => {
+    getIncomeByMonthCategory(username, year, month);
+    getExpenseByMonthCategory(username, year, month);
+  }, [year, month]);
 
   return (
     <div>
@@ -143,4 +154,4 @@ function DoughnutChart(props) {
   );
 }
 
-export default DoughnutChart;
+export default ChartDoughnut;

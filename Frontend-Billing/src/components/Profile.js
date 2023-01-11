@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import AuthService from "../services/auth.service";
+import { useSelector } from "react-redux";
 
 function Profile() {
   const [redirect, setRedirect] = useState(null);
   const [userReady, setUserReady] = useState(false);
-  const [currentUser, setCurrentUser] = useState({ username: "" });
+  const currentUser = useSelector((state) => {
+    return state.auth.user;
+  });
 
   useEffect(() => {
-    const currentUser = AuthService.getCurrentUser();
     if (!currentUser) {
       setRedirect("/home");
     }
-    setCurrentUser(currentUser);
     setUserReady(true);
   }, []);
 

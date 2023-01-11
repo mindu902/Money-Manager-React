@@ -1,25 +1,32 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Calendar from "react-calendar";
 import Table from "react-bootstrap/Table";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { Card } from "react-bootstrap";
 
 import "../styles/dashboard.css";
 import "../styles/calendar.css";
 import moment from "moment";
 import IncomeService from "../services/income.service";
 import ExpenseService from "../services/expense.service";
+import { updateTime } from "../store/dateSlice";
 
-function CalenderTable(props) {
+function CalenderTable() {
+  const dispatch = useDispatch();
   const username = useSelector((state) => {
     return state.auth.user.username;
   });
-  const today = moment().format("YYYY-MM-DD");
+  const { date, month, year } = useSelector((state) => {
+    return {
+      date: state.date.date,
+      month: state.date.month,
+      year: state.date.year,
+    };
+  });
+
   const [incomes, setIncomes] = useState({ income: [] });
   const [expenses, setExpenses] = useState({ expense: [] });
-  const [currdate, setCurrdate] = useState(today);
   const [marks, setMarks] = useState(new Set());
 
   const weekdays = {
@@ -33,11 +40,11 @@ function CalenderTable(props) {
   };
 
   useEffect(() => {
-    IncomeService.getIncomeByDate(username, currdate).then((response) => {
+    IncomeService.getIncomeByDate(username, date).then((response) => {
       setIncomes({ income: response });
     });
 
-    ExpenseService.getExpenseByDate(username, currdate).then((response) => {
+    ExpenseService.getExpenseByDate(username, date).then((response) => {
       setExpenses({ expense: response });
     });
 
@@ -56,14 +63,18 @@ function CalenderTable(props) {
         );
       });
     });
-  }, [currdate]);
+  }, [date]);
 
   const handleChange = (value) => {
     let selectDate = moment(value).format("YYYY-MM-DD");
-    let selectMonth = moment(selectDate).month() + 1;
-    let selectYear = moment(selectDate).year();
-    setCurrdate(selectDate);
-    props.changeMonyear(selectMonth, selectYear, selectDate);
+
+    dispatch(
+      updateTime({
+        date: selectDate,
+        month: moment(selectDate).month() + 1,
+        year: moment(selectDate).year(),
+      })
+    );
   };
 
   return (
@@ -85,7 +96,7 @@ function CalenderTable(props) {
             <thead>
               <tr>
                 <th>
-                  {currdate} {weekdays[moment(currdate).weekday()]}
+                  {date} {weekdays[moment(date).weekday()]}
                 </th>
               </tr>
             </thead>

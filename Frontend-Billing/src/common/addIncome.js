@@ -4,7 +4,6 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import FormControl from "react-bootstrap/FormControl";
 import Modal from "react-bootstrap/Modal";
 import moment from "moment";
 import IncomeService from "../services/income.service";
@@ -31,6 +30,7 @@ function AddIncome(props) {
       notes
     ).then((response) => {
       console.log(response);
+      window.location.reload();
     });
 
     props.handleClose();

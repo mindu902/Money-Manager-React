@@ -3,8 +3,8 @@ import Table from "react-bootstrap/Table";
 import IncomeService from "../services/income.service";
 import ExpenseService from "../services/expense.service";
 import moment from "moment";
-import DateRangePicker from "../common/daterangepicker";
-import TypeCategoryDropDown from "../common/typecategoryDropdown";
+import ListDateRangePicker from "../common/ListDateRangePicker";
+import ListTypeCategoryDropdown from "../common/ListTypeCategoryDropdown";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import Pagination from "react-bootstrap/Pagination";
@@ -42,7 +42,6 @@ function ListView() {
   for (let number = 1; number <= totalPages; number++) {
     pagesArr.push(number);
   }
-  // let currpageData = filteredrecords.slice(startIndex, endIndex);
   const [currpageData, setCurrpageData] = useState([]);
 
   const updateDaterange = (type, date) => {
@@ -163,20 +162,20 @@ function ListView() {
         </Row>
         <Row>
           <Col md={3}>
-            <TypeCategoryDropDown
+            <ListTypeCategoryDropdown
               selecttype={selecttype}
               selectcategory={selectcategory}
               updateType={updateType}
               updateCategory={updateCategory}
-            ></TypeCategoryDropDown>
+            ></ListTypeCategoryDropdown>
           </Col>
 
           <Col md={4}>
-            <DateRangePicker
+            <ListDateRangePicker
               startDate={startDate}
               endDate={endDate}
               updateDaterange={updateDaterange}
-            ></DateRangePicker>
+            ></ListDateRangePicker>
           </Col>
 
           <Col md={3}>

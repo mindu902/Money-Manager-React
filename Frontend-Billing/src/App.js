@@ -3,19 +3,21 @@ import { Routes, Route, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 import { Navbar, Nav } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 import AuthService from "./services/auth.service";
 
-import Login from "./components/login.component";
-import Register from "./components/register.component";
-import Home from "./components/home.component";
-import Profile from "./components/profile.component";
-import Dashboard from "./components/dashboard.component";
-import ListView from "./components/listview.component";
+import Login from "./components/Login";
+import Register from "./components/Register";
+import Home from "./components/Home";
+import Profile from "./components/Profile";
+import Dashboard from "./components/Dashboard";
+import ListView from "./components/ListView";
 import NavDropdown from "react-bootstrap/NavDropdown";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(undefined);
+  let navigate = useNavigate();
 
   useEffect(() => {
     const user = AuthService.getCurrentUser();
@@ -27,6 +29,7 @@ function App() {
   const logOut = () => {
     AuthService.logout();
     setCurrentUser(undefined);
+    navigate("/profile");
   };
 
   return (

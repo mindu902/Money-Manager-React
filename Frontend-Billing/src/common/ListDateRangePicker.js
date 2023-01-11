@@ -6,7 +6,7 @@ import Col from "react-bootstrap/Col";
 import "../styles/listview.css";
 import { Form } from "react-bootstrap";
 
-function DateRangePicker(props) {
+function ListDateRangePicker(props) {
   const changeDate = (type, date) => {
     props.updateDaterange(type, date);
   };
@@ -41,4 +41,4 @@ function DateRangePicker(props) {
   );
 }
 
-export default DateRangePicker;
+export default ListDateRangePicker;
