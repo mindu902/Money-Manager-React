@@ -68,6 +68,28 @@ class IncomeService {
         return response.data;
       });
   }
+
+  async deleteIncome(id) {
+    return axios
+      .delete(API_URL + "delete", { data: { id: id } })
+      .then((response) => {
+        console.log(response.data.message);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  async updateIncome(updateData) {
+    return axios
+      .put(API_URL + "update", { updateData })
+      .then((response) => {
+        return response.data.message;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 }
 
 export default new IncomeService();

@@ -1,7 +1,8 @@
 .closebutton {
   background-color: #ffffff;
   border-radius: 15px;
-  position: fixed;
+  position: absolute;
   bottom: 3em;
   right: 3em;
+  z-index: 9999;
 }

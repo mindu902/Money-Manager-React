@@ -11,6 +11,7 @@ import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { Button } from "react-bootstrap";
+import Modal from "react-bootstrap/Modal";
 import "../styles/listview.css";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -19,6 +20,8 @@ import {
   setinitialData,
   filterData,
 } from "../store/listdataSlice";
+import FormIncome from "../common/FormIncome";
+import FormExpense from "../common/FormExpense";
 
 function ListView() {
   const dispatch = useDispatch();
@@ -79,6 +82,51 @@ function ListView() {
 
   const changePageContent = (pag) => {
     setCurrpage(pag);
+  };
+
+  const [show, setShow] = useState(false);
+  // const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false);
+
+  const handleDelete = async (record) => {
+    if (record.datatype === "Income") {
+      await IncomeService.deleteIncome(record.id);
+    } else {
+      await ExpenseService.deleteExpense(record.id);
+    }
+    window.location.reload();
+  };
+
+  const [selectData, setSelectData] = useState([]);
+
+  const handleEdit = (record) => {
+    setShow(true);
+    console.log(record);
+    setSelectData(record);
+  };
+
+  const editIncome = (formvalue) => {
+    console.log(formvalue);
+    IncomeService.updateIncome(formvalue)
+      .then((response) => {
+        console.log(response);
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  const editExpense = (formvalue) => {
+    console.log(formvalue);
+    ExpenseService.updateExpense(formvalue)
+      .then((response) => {
+        console.log(response);
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   //create pagination items
@@ -184,16 +232,17 @@ function ListView() {
                           variant="secondary"
                           size="sm"
                           onClick={() => {
-                            console.log(record);
+                            handleEdit(record);
                           }}
                         >
                           Edit
                         </Button>
+
                         <Button
                           size="sm"
                           variant="danger"
                           onClick={() => {
-                            console.log(record);
+                            handleDelete(record);
                           }}
                         >
                           Delete
@@ -210,6 +259,24 @@ function ListView() {
       <Row>
         <Pagination className={"totalbox"}>{PaginationItems}</Pagination>
       </Row>
+
+      {show && (
+        <Modal show={show} onHide={handleClose}>
+          {selectData.datatype === "Income" ? (
+            <FormIncome
+              handleClose={handleClose}
+              initialValues={selectData}
+              handleSubmit={editIncome}
+            ></FormIncome>
+          ) : (
+            <FormExpense
+              handleClose={handleClose}
+              initialValues={selectData}
+              handleSubmit={editExpense}
+            ></FormExpense>
+          )}
+        </Modal>
+      )}
     </div>
   );
 }

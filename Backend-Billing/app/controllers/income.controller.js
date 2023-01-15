@@ -161,3 +161,33 @@ exports.getSumIncomeByMon = (req, res) => {
       res.status(500).send({ message: err.message });
     });
 };
+
+exports.deleteIncomebyID = (req, res) => {
+  console.log(req);
+  Income.destroy({
+    where: {
+      id: req.body.id,
+    },
+  })
+    .then(() => {
+      res.status(200).json({
+        message: "Income deleted successfully",
+      });
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+};
+
+exports.updateIncomebyID = (req, res) => {
+  console.log("hehe", req.body.updateData);
+  Income.update(req.body.updateData, { where: { id: req.body.updateData.id } })
+    .then(() => {
+      res.status(200).json({
+        message: "Income updated successfully",
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err.message });
+    });
+};

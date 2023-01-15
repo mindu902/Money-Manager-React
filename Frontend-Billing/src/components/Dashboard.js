@@ -10,7 +10,7 @@ import WidgetIncome from "../common/WidgetIncome";
 import ChartBar from "../common/ChartBar";
 import ChartDoughnut from "../common/ChartDoughnut";
 import CalenderTable from "../common/CalenderTable";
-import AddButton from "../common/AddButton";
+// import AddRecord from "../common/AddRecord";
 
 function Dashboard() {
   return (
@@ -47,7 +47,7 @@ function Dashboard() {
           <CalenderTable></CalenderTable>
         </Col>
       </Row>
-      <AddButton></AddButton>
+      {/* <AddRecord></AddRecord> */}
     </Container>
   );
 }

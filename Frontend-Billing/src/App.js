@@ -14,6 +14,7 @@ import Profile from "./components/Profile";
 import Dashboard from "./components/Dashboard";
 import ListView from "./components/ListView";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import AddRecord from "./common/AddRecord";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(undefined);
@@ -64,6 +65,7 @@ function App() {
           </Nav>
         </Navbar.Collapse>
       </Navbar>
+      <AddRecord></AddRecord>
 
       <div>
         <Routes>

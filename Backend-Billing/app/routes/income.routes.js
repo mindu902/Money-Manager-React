@@ -22,4 +22,8 @@ module.exports = function (app) {
   app.post("/api/income/date", controller.getIncomeByDate);
 
   app.post("/api/income/sum/day", controller.getSumIncomeByMon);
+
+  app.delete("/api/income/delete", controller.deleteIncomebyID);
+
+  app.put("/api/income/update", controller.updateIncomebyID);
 };
