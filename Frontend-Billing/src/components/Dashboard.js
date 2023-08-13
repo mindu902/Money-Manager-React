@@ -9,7 +9,7 @@ import WidgetBalance from "../common/WidgetBalance";
 import WidgetIncome from "../common/WidgetIncome";
 import ChartBar from "../common/ChartBar";
 import ChartDoughnut from "../common/ChartDoughnut";
-import CalenderTable from "../common/CalenderTable";
+import CalenderTable from "../common/calenderTable";
 // import AddRecord from "../common/AddRecord";
 
 function Dashboard() {
